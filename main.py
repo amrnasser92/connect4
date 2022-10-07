@@ -1,8 +1,5 @@
-from operator import index, indexOf
+from operator import  indexOf
 import time
-
-
-from matplotlib.widgets import EllipseSelector
 
 
 class Game:
@@ -40,85 +37,73 @@ class Game:
     def reset_board(self):
         self.__init__(self.r,self.c)         
 
+    def win(self,letter):
+        for row in self.board:
+            
+            for col in range(len(self.board[0])-3):
+                if all([self.board[indexOf(self.board,row)][col+x]==' '+letter+' ' for x in range(4)]):
+                    return True
+                    
+        for col in range(len(self.board[0])):              
+            for row in range(len(self.board)-3):
+                if all([self.board[row+x][col]==' '+letter+' ' for x in range(4)]):
+                    return True
+
+        for row in range(len(self.board)):
+            for col in range(len(self.board[0])):        
+                if row <= 2 and col <= 3 :
+                    if all([self.board[row+x][col+x]==' '+letter+' ' for x in range(4)]):
+                        return True
+                elif row <= 2 and col <= 6 :    
+                    if all([self.board[row+x][col-x]==' '+letter+' ' for x in range(4)]):
+                        return True
+                elif row > 2 and col <= 3 :        
+                    if all([self.board[row-x][col+x]==' '+letter+' ' for x in range(4)]):
+                        return True 
+                else:
+                    if all([self.board[row-x][col-x]==' '+letter+' ' for x in range(4)]):
+                        return True 
+        return False   
 
 
 
 
-def user_play(letter:str,game):
-    c = len(game.board[0])+1
-    time.sleep(1)
-    while not game.valid_input(c):
-        c = int(input("Enter Column Number:   "))
-        print(game)
-    time.sleep(1)
-    game.insert_piece(c,letter.upper())    
 
-game1 = Game(6,7)
+def play(game:Game)->None:
+    
+    player1 = 'x'
+    player2 = 'o'
+    
+    player =  player1
 
-
-def win(game,letter):
-    for row in game.board:
+    while True:
         
-        for col in range(len(game.board[0])-3):
-            if all([game.board[indexOf(game.board,row)][col+x]==' '+letter+' ' for x in range(4)]):
-                return True
-                
-    for col in range(len(game.board[0])):              
-        for row in range(len(game.board)-3):
-            if all([game.board[row+x][col]==' '+letter+' ' for x in range(4)]):
-                return True
+        c = int(input('Enter a column number to play:  '))
+        while not game.valid_input(c):
+            c = int(input('Enter a column number to play:  '))
 
-    for row in range(len(game.board)):
-        for col in range(len(game.board[0])):        
-            if row <= 2 and col <= 3 :
-                if all([game.board[row+x][col+x]==' '+letter+' ' for x in range(4)]):
-                    return True
-            elif row <= 2 and col <= 6 :    
-                if all([game.board[row+x][col-x]==' '+letter+' ' for x in range(4)]):
-                    return True
-            elif row > 2 and col <= 3 :        
-                if all([game.board[row-x][col+x]==' '+letter+' ' for x in range(4)]):
-                    return True 
-            else:
-                if all([game.board[row-x][col-x]==' '+letter+' ' for x in range(4)]):
-                    return True 
-    return False    
+        game.insert_piece(c,player)
+        if game.win(player):
+            print(f'Player {player} won')
+            break
+        if player == player1:
+            player = player2
+        else:
+            player = player1
+
+
+if __name__='__main__':
+    game = Game(6,7)
+    play(game)
+     
+    
+
+
+
+
+
+
      
 
-win(game1,'o')
-
-print(game1)
-
-game1.reset_board()
-
-game1.board[5][0]
-
-for i in range(len(game1.board)):
-    print(i)
-
-user_play('x',game1)
-user_play('o',game1)
 
 
-
-
-
-
-print(game1)
-
-win(game1,'x')
-
-
-
-c=7
-r=6
-
-test = [[' ('+str(j)+' , '+str(i) +') ' for i in range(c)] for j in range(r)]
-
-for row in test:
-    print(row)
-
-# if row < 3 and column <5 check + 1 col + 1 row up to (0,0) -> (2,3)
-# if row < 3 and column >5 check -1 col + 1 row (2,3) -> (2,6)
-# if row > 3 and column <5 check + 1 col - 1 row (3,0) -> (3,3)
-# if row > 3 and column >5 check -1 col - 1 row (3,4) ->
