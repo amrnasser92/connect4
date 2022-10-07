@@ -92,7 +92,7 @@ def play(game:Game)->None:
             player = player1
 
 
-if __name__='__main__':
+if __name__=='__main__':
     game = Game(6,7)
     play(game)
      
