@@ -1,4 +1,8 @@
+from operator import index, indexOf
 import time
+
+
+from matplotlib.widgets import EllipseSelector
 
 
 class Game:
@@ -51,10 +55,70 @@ def user_play(letter:str,game):
 
 game1 = Game(6,7)
 
+
+def win(game,letter):
+    for row in game.board:
+        
+        for col in range(len(game.board[0])-3):
+            if all([game.board[indexOf(game.board,row)][col+x]==' '+letter+' ' for x in range(4)]):
+                return True
+                
+    for col in range(len(game.board[0])):              
+        for row in range(len(game.board)-3):
+            if all([game.board[row+x][col]==' '+letter+' ' for x in range(4)]):
+                return True
+
+    for row in range(len(game.board)):
+        for col in range(len(game.board[0])):        
+            if row <= 2 and col <= 3 :
+                if all([game.board[row+x][col+x]==' '+letter+' ' for x in range(4)]):
+                    return True
+            elif row <= 2 and col <= 6 :    
+                if all([game.board[row+x][col-x]==' '+letter+' ' for x in range(4)]):
+                    return True
+            elif row > 2 and col <= 3 :        
+                if all([game.board[row-x][col+x]==' '+letter+' ' for x in range(4)]):
+                    return True 
+            else:
+                if all([game.board[row-x][col-x]==' '+letter+' ' for x in range(4)]):
+                    return True 
+    return False    
+     
+
+win(game1,'o')
+
 print(game1)
 
+game1.reset_board()
 
-while True:
+game1.board[5][0]
 
-    user_play('x',game1)
-    user_play('o',game1)
+for i in range(len(game1.board)):
+    print(i)
+
+user_play('x',game1)
+user_play('o',game1)
+
+
+
+
+
+
+print(game1)
+
+win(game1,'x')
+
+
+
+c=7
+r=6
+
+test = [[' ('+str(j)+' , '+str(i) +') ' for i in range(c)] for j in range(r)]
+
+for row in test:
+    print(row)
+
+# if row < 3 and column <5 check + 1 col + 1 row up to (0,0) -> (2,3)
+# if row < 3 and column >5 check -1 col + 1 row (2,3) -> (2,6)
+# if row > 3 and column <5 check + 1 col - 1 row (3,0) -> (3,3)
+# if row > 3 and column >5 check -1 col - 1 row (3,4) ->
